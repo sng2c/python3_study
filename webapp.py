@@ -1,6 +1,8 @@
 from flask import Flask
 from flask import request
+
 app = Flask(__name__)
+
 
 @app.route("/")
 def hello():
@@ -12,19 +14,20 @@ def hello():
     </form>
     """
 
-@app.route("/hello", methods=['GET','POST'])
+
+@app.route("/hello", methods=['GET', 'POST'])
 def hello2():
     name = None
     if request.method == 'POST':
         name = request.form['name']
     else:
         name = request.args.get('name')
-    return "Hello "+name
+    return "Hello " + name
+
 
 @app.route("/hello2")
 def hello3():
-
-    return "hello "+name
+    return "hello "
 
 
 if __name__ == "__main__":
