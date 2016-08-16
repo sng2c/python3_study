@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import request, redirect, current_app
 import datetime
+import hashlib
 
 app = Flask(__name__)
 
@@ -25,7 +26,27 @@ def login():
     userid = request.form['id']
     userpw = request.form['pw']
 
-    if userid == "hanson" and userpw == "1111":
+    # 글자 md5 시키기
+    # $ python3
+    # Python 3.5.1 (default, May 20 2016, 18:18:52)
+    # [GCC 4.2.1 Compatible Apple LLVM 7.3.0 (clang-703.0.31)] on darwin
+    # Type "help", "copyright", "credits" or "license" for more information.
+    # >>> import hashlib
+    # >>> hashlib.md5("1111".encode()).hexdigest()
+    # 'b59c67bf196a4758191e42f76670ceba'
+
+    userpw = hashlib.md5(userpw.encode()).hexdigest()
+
+    login_ok = False
+
+    with open("passwords.txt") as passfile:
+        for passwd in passfile:
+            _id, _pw = passwd.rstrip().split(":")
+            if userid == _id and userpw == _pw:
+                login_ok = True
+                break
+
+    if login_ok:
         # 쿠키 발급
         redirection = redirect("/")
         response = current_app.make_response(redirection)
